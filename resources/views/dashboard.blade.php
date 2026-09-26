@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard - Monitoring Unit Service</title>
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('css/dashboard.css') }}">
     <script>
         // FIX kedip: sembunyiin dulu SELURUH halaman (sebelum browser sempat nge-paint
         // apapun) kalau ketauan ada posisi scroll yang mau dipulihin. Jadi user ga pernah
