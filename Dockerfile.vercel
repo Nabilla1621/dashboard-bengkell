@@ -8,6 +8,14 @@ COPY --from=node:22-bookworm /usr/local/lib/node_modules /usr/local/lib/node_mod
 
 COPY . .
 
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install
