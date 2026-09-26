@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip \
+    && docker-php-ext-install -j$(nproc) gd zip pdo_mysql \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .
