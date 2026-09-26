@@ -46,7 +46,7 @@
             <span class="btn-icon">🕓</span> Riwayat Import
         </button>
 
-        <form method="GET" action="{{ url('/') }}" class="filters">
+        <form method="GET" action="{{ secure_url('/') }}" class="filters">
             <fieldset class="group">
                 <legend>Filter periode</legend>
                 <div class="pills">
