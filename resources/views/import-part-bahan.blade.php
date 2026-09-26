@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Import Data - Monitoring Unit Service</title>
-    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('css/dashboard.css') }}">
 </head>
 <body>
     <div class="content" style="max-width: 720px; margin: 0 auto; padding-top: 26px;">
