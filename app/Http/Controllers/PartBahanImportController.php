@@ -30,7 +30,7 @@ class PartBahanImportController extends Controller
     {
         $data = $request->validate([
             'cabang' => ['required', 'string'],
-            'maintain_pkb_file' => ['nullable', 'file', 'extensions:xls,xlsx,html,htm', 'max:10240'],
+            'maintain_pkb_file' => ['nullable', 'file', 'max:10240'],
             'service_penjualan_file' => ['nullable', 'file', 'mimes:xls,xlsx', 'max:10240'],
             'comsumable' => ['nullable', 'file', 'mimes:xls,xlsx', 'max:10240'],
             'nota_pkb' => ['nullable', 'file', 'mimes:xls,xlsx', 'max:10240'],
