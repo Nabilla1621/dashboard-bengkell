@@ -9,31 +9,42 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Lepas FK di fakturs KALAU ADA (di database ini ternyata belum pernah kebuat)
+        // 1. Lepas FK di fakturs KALAU ADA
         if ($this->foreignKeyExists('fakturs', 'fakturs_no_pkb_foreign')) {
             Schema::table('fakturs', function (Blueprint $table) {
                 $table->dropForeign('fakturs_no_pkb_foreign');
             });
         }
 
-        // 2. Drop unique lama KALAU ADA, ganti jadi unique gabungan (no_pkb, cabang)
-        //    plus index biasa di no_pkb sendiri, supaya FK bisa nempel ke situ.
-        Schema::table('pkbs', function (Blueprint $table) {
-            if ($this->indexExists('pkbs', 'pkbs_no_pkb_unique')) {
+        // 2. Drop unique lama KALAU ADA
+        if ($this->indexExists('pkbs', 'pkbs_no_pkb_unique')) {
+            Schema::table('pkbs', function (Blueprint $table) {
                 $table->dropUnique(['no_pkb']);
-            }
-            $table->unique(['no_pkb', 'cabang']);
-            $table->index('no_pkb');
-        });
+            });
+        }
 
-        // 3. Tambah kolom cabang di fakturs (kalau belum ada)
+        // 3. Tambah unique gabungan KALAU BELUM ADA
+        if (! $this->indexExists('pkbs', 'pkbs_no_pkb_cabang_unique')) {
+            Schema::table('pkbs', function (Blueprint $table) {
+                $table->unique(['no_pkb', 'cabang']);
+            });
+        }
+
+        // 4. Tambah index biasa di no_pkb KALAU BELUM ADA
+        if (! $this->indexExists('pkbs', 'pkbs_no_pkb_index')) {
+            Schema::table('pkbs', function (Blueprint $table) {
+                $table->index('no_pkb');
+            });
+        }
+
+        // 5. Tambah kolom cabang di fakturs KALAU BELUM ADA
         if (! Schema::hasColumn('fakturs', 'cabang')) {
             Schema::table('fakturs', function (Blueprint $table) {
                 $table->string('cabang')->nullable()->after('no_pkb');
             });
         }
 
-        // 4. Pasang FK-nya, menunjuk ke index biasa no_pkb yang baru dibuat
+        // 6. Pasang FK-nya KALAU BELUM ADA
         if (! $this->foreignKeyExists('fakturs', 'fakturs_no_pkb_foreign')) {
             Schema::table('fakturs', function (Blueprint $table) {
                 $table->foreign('no_pkb')->references('no_pkb')->on('pkbs');
@@ -55,15 +66,23 @@ return new class extends Migration
             });
         }
 
-        Schema::table('pkbs', function (Blueprint $table) {
-            if ($this->indexExists('pkbs', 'pkbs_no_pkb_index')) {
+        if ($this->indexExists('pkbs', 'pkbs_no_pkb_index')) {
+            Schema::table('pkbs', function (Blueprint $table) {
                 $table->dropIndex(['no_pkb']);
-            }
-            if ($this->indexExists('pkbs', 'pkbs_no_pkb_cabang_unique')) {
+            });
+        }
+
+        if ($this->indexExists('pkbs', 'pkbs_no_pkb_cabang_unique')) {
+            Schema::table('pkbs', function (Blueprint $table) {
                 $table->dropUnique(['no_pkb', 'cabang']);
-            }
-            $table->unique(['no_pkb']);
-        });
+            });
+        }
+
+        if (! $this->indexExists('pkbs', 'pkbs_no_pkb_unique')) {
+            Schema::table('pkbs', function (Blueprint $table) {
+                $table->unique(['no_pkb']);
+            });
+        }
     }
 
     private function foreignKeyExists(string $table, string $constraintName): bool
@@ -89,7 +108,3 @@ return new class extends Migration
               AND TABLE_NAME = ?
               AND INDEX_NAME = ?
         ", [$table, $indexName]);
-
-        return count($result) > 0;
-    }
-};
