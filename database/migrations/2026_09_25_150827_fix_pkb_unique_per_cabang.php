@@ -39,18 +39,23 @@ return new class extends Migration
             });
         }
 
-        if (! $this->foreignKeyExists('fakturs', 'fakturs_no_pkb_foreign')) {
+        if (! $this->foreignKeyExists('fakturs', 'fakturs_no_pkb_cabang_foreign')) {
             Schema::table('fakturs', function (Blueprint $table) {
-                $table->foreign('no_pkb')->references('no_pkb')->on('pkbs');
+                $table->foreign(
+                    ['no_pkb', 'cabang'],
+                    'fakturs_no_pkb_cabang_foreign'
+                )->references(
+                    ['no_pkb', 'cabang']
+                )->on('pkbs');
             });
         }
     }
 
     public function down(): void
     {
-        if ($this->foreignKeyExists('fakturs', 'fakturs_no_pkb_foreign')) {
+        if ($this->foreignKeyExists('fakturs', 'fakturs_no_pkb_cabang_foreign')) {
             Schema::table('fakturs', function (Blueprint $table) {
-                $table->dropForeign(['no_pkb']);
+                $table->dropForeign('fakturs_no_pkb_cabang_foreign');
             });
         }
 
