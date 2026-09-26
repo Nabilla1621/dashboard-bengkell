@@ -30,7 +30,17 @@ class PartBahanImportController extends Controller
     {
         $data = $request->validate([
             'cabang' => ['required', 'string'],
-            'maintain_pkb_file' => ['nullable', 'file', 'max:10240'],
+            'maintain_pkb_file' => [
+                'nullable',
+                'file',
+                'max:10240',
+                function ($attribute, $value, $fail) {
+                    $ext = strtolower($value->getClientOriginalExtension());
+                    if (! in_array($ext, ['xls', 'xlsx', 'html', 'htm'])) {
+                        $fail('File Maintain PKB harus berformat .xls, .xlsx, .html, atau .htm.');
+                    }
+                },
+            ],
             'service_penjualan_file' => ['nullable', 'file', 'mimes:xls,xlsx', 'max:10240'],
             'comsumable' => ['nullable', 'file', 'mimes:xls,xlsx', 'max:10240'],
             'nota_pkb' => ['nullable', 'file', 'mimes:xls,xlsx', 'max:10240'],
