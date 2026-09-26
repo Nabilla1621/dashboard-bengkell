@@ -28,6 +28,18 @@ class PartBahanImportController extends Controller
 
     public function store(Request $request, PartBahanImportService $service): RedirectResponse
     {
+        if ($request->has('maintain_pkb_file')) {
+            $file = $request->file('maintain_pkb_file');
+        
+            if ($file) {
+                Log::error('UPLOAD DEBUG', [
+                    'error_code' => $file->getError(),
+                    'error_message' => $file->getErrorMessage(),
+                    'size' => $file->getSize(),
+                    'name' => $file->getClientOriginalName(),
+                ]);
+            }
+        }
         $data = $request->validate([
             'cabang' => ['required', 'string'],
             'maintain_pkb_file' => ['nullable', 'file', 'mimes:xls,xlsx,html,htm', 'max:10240'],
